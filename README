@@ -1,0 +1,143 @@
+libsox.sh
+---------
+
+A library for GNU bash making it easier to create music with the power of SoX
+synths.
+
+Usage
+-----
+
+Simply source libsox.sh into the script containing the music. Example scripts
+are included in this repository.
+
+Usual syntax
+------------
+#############################################################################
+#!/bin/bash
+
+: '
+Long copyright boilerplate goes here.
+It's up to you though if you want to include it or not.
+'
+
+source path/to/libsox.sh
+
+declare textintro='
+Optional ASCII art and info about the music goes here.
+
+'
+
+setTempo 120 # In BPM
+
+notes=(
+ # "$duration:${note[pitch]}"
+
+ # Basic durations:
+ #  $fu = whole note
+ #  $ha = half note
+ #  $qu = quarter note
+ #  $ei = eighth note
+ #  $si = sixteenth note
+ # We use scientific pitch notation
+
+ "$ha:0" # This is how to do a half rest
+
+ "$si:${c[5]}" # A sixteenth C note in the 5th octave
+ "$ei:${gs[4]}" # An eighth G sharp in 4th octave
+ "$qu:${fs[4]}"
+)
+
+function repeatingNotes { # Use bash functions to repeat parts of your music
+ notes+=( # use += to append to the notes array
+  "$qu:${cs[4]}"
+  "$qu:${ds[4]}"
+  "$qu:${e[3]}"
+  "$qu:${gs[4]}"
+ )
+}
+repeatingNotes # Don't forget to call your function
+notes+=( # continue adding notes
+ "$ei:${cs[4]}"
+ "$ei:${cs[4]}"
+ "$ei:${ds[4]}"
+ "$ei:${ds[4]}"
+)
+repeatingNotes # Will repeat the earlier C sharp, D sharp, E, and G sharp
+               # quarter notes
+notes+=(
+ "$dei:${b[2]}" # Dotted notes are supported
+ "$tqu:${a[3]}" # Triplets are supported
+ "0.02:${gs[4]}" # You can do custom durations
+ "0.05:489 # Custom frequencies too, though I'm not sure why you'd do that
+)
+
+execute loop no $1 # Will not loop
+                   # Useful for intros that shouldn't be looped back into
+                   # For $1, type --help in one of the example scripts
+# Loop start
+setTempo 160 # Change the BPM if needed
+
+notes=( # Don't forget to reset the notes array. Don't append.
+ "$dei:${fs[5]}"
+ "$dei:${c[6]}"
+ "$ei:${as[5]}"
+ "$ha:${as[5]}"
+ "$ei:${as[5]}"
+)
+function commonNotes {
+ notes+=(
+  "$si:${cs[5]}"
+  "$si:${gs[4]}"
+  "$si:${fs[4]}"
+  "$si:${e[4]}"
+  "$si:${cs[5]}"
+ )
+}
+commonNotes; commonNotes;
+notes+=(
+ "$qu:${c[4]}"
+ "$qu:${cs[4]}"
+ "$qu:${ds[4]}"
+ "$ei:${f[4]}"
+ "$si:${as[4]}"
+ "$dei:${f[4]}"
+)
+commonNotes
+notes+=(
+ "$dei:${f[4]}"
+ "$ei:${as[4]}"
+ "$ei:${a[4]}"
+ "$ei:${a[4]}"
+ "$ei:${as[4]}"
+ "$si:${a[4]}"
+ "$si:${as[4]}"
+ "$si:${f[5]}"
+)
+
+execute loop yes $1 # Will loop forever.
+                    # Don't forget to include the arguments! They're required.
+
+#############################################################################
+
+License
+-------
+
+Copyright (C) 2022 Job Bautista
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
