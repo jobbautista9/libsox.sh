@@ -72,47 +72,53 @@ function execute {
 
  if [[ $1 = "loop" && $2 ]]
  then
-  case $3 in
-   "--arggen")
-    soxPipesCreator &&
-    echo "$soxpipes"
-    ;;
-   "--help")
-    printf "%s\n" \
-    "Usage: $(basename $0) (--arggen)" \
-    "" \
-    "Generates sounds from SoX according to the notes array and plays them." \
-    "" \
-    " --arggen                  Will not play music; instead it will redirect" \
-    "                             all generated SoX pipes to standard output." \
-    " --help                    Display this help." \
-    ""
-    exit 0
-    ;;
-   *)
-    if [ $melodyCount -eq 0 ]
-    then
-     printf "$textintro"
-    fi
-    echo "Pipes are loading, please wait..."
-    soxPipesCreator &&
-    trap 'pkill -f "play -S -V1"; exit 0' SIGINT SIGTERM
-    if [ $2 = "yes" ]
-    then
-     while true
-     do
+  if [[ $2 = "yes" || $2 = "no" ]]
+  then
+   case $3 in
+    "--arggen")
+     soxPipesCreator &&
+     echo "$soxpipes"
+     ;;
+    "--help")
+     printf "%s\n" \
+     "Usage: $(basename $0) (--arggen)" \
+     "" \
+     "Generates sounds from SoX according to the notes array and plays them." \
+     "" \
+     " --arggen                  Will not play music; instead it will redirect" \
+     "                             all generated SoX pipes to standard output." \
+     " --help                    Display this help." \
+     ""
+     exit 0
+     ;;
+    *)
+     if [ $melodyCount -eq 0 ]
+     then
+      printf "$textintro"
+     fi
+     echo "Pipes are loading, please wait..."
+     soxPipesCreator &&
+     trap 'pkill -f "play -S -V1"; exit 0' SIGINT SIGTERM
+     if [ $2 = "yes" ]
+     then
+      while true
+      do
+       soxPlayPipes
+       ((melodyCount++))
+      done
+     else
       soxPlayPipes
       ((melodyCount++))
-     done
-    else
-     soxPlayPipes
-     ((melodyCount++))
-    fi
-    ;;
-  esac
- unset soxpipes # For multiple instances of this function
+     fi
+     ;;
+   esac
+  else
+   echo "Error: Invalid loop argument"
+   exit 1
+  fi
  else
   echo "Error: Missing loop argument"
   exit 1
  fi
+ unset soxpipes # For multiple instances of this function
 }
