@@ -10,9 +10,28 @@ Usage
 Simply source libsox.sh into the script containing the music. Example scripts
 are included in this repository.
 
-Usual syntax
-------------
-#############################################################################
+Example child script syntax
+---------------------------
+
+./music.sh | xargs play -S -V1 # Plays into SoX once
+
+./music.sh | xargs ./myplay-repeat.sh 1 # Plays into SoX twice
+
+./music.sh | xargs ./mysox.sh music.wav # Saves into "music.wav" using SoX
+
+./music.sh | head -n +37 | xargs play -S -V1 ; ./music.sh | tail -n +37 |
+ xargs ./myplay-repeat.sh 3    # Plays line 1 to 37 of music.sh's output once,
+                                 then plays the rest thrice
+
+./music.sh | xargs ./mysox.sh - | cvlc - # Saves into stdout then pipes it into
+                                           vlc
+./music.sh > music.txt         # Redirects music.sh's output to a text file
+
+./music.sh | xclip -i          # Copies music.sh's output to XA_PRIMARY
+
+Usual child script format
+-------------------------
+##############################################################################
 #!/bin/bash
 
 : '
@@ -71,9 +90,8 @@ notes+=(
  "0.05:489 # Custom frequencies too, though I'm not sure why you'd do that
 )
 
-execute loop no $1 # Will not loop
-                   # Useful for intros that shouldn't be looped back into
-                   # For $1, type --help in one of the example scripts
+execute # Useful for dividing the part that loops and the part that doesn't
+
 # Loop start
 setTempo 160 # Change the BPM if needed
 
@@ -114,10 +132,9 @@ notes+=(
  "$si:${f[5]}"
 )
 
-execute loop yes $1 # Will loop forever.
-                    # Don't forget to include the arguments! They're required.
+execute
 
-#############################################################################
+##############################################################################
 
 License
 -------

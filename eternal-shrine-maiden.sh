@@ -79,7 +79,7 @@ notes+=(
  "$qu:${g[4]}"
 )
 
-execute loop no $1
+execute # loop no $1
 
 notes=()
 
@@ -250,4 +250,4 @@ notes+=(
  "$qu:${g[4]}"
 )
 
-execute loop yes $1
+execute # loop yes $1

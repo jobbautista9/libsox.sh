@@ -48,6 +48,7 @@ function setTempo {
  declare -g qu=$(echo "scale=3; 60 / $BPM" | bc -l) # Quarter note
  declare -g ei=$(echo "scale=3; 30 / $BPM" | bc -l) # Eighth note
  declare -g si=$(echo "scale=3; 15 / $BPM" | bc -l) # Sixteenth note
+ declare -g dha=$(echo "scale=3; 190 / $BPM" | bc -l) # Dotted-half note
  declare -g dqu=$(echo "scale=3; 90 / $BPM" | bc -l) # Dotted-quarter note
  declare -g dei=$(echo "scale=3; 45 / $BPM" | bc -l) # Dotted-eighth note
  declare -g dsi=$(echo "scale=3; 22.5 / $BPM" | bc -l) # Dotted-sixteenth note
@@ -61,64 +62,13 @@ declare -a notes # In the following format - "$duration:${key}[pitch]"
 declare melodyCount=0
 function execute {
  declare soxpipes
- function soxPipesCreator {
-  for note in "${notes[@]}"
-  do
-   soxpipes+=$(printf '"|sox -n -p synth '$(echo "$note" |
-               sed 's/:.*//')' sin '$(echo "$note" | sed 's/.*://')'" ')
-  done
- }
- function soxPlayPipes { echo "$soxpipes" | xargs play -S -V1; };
+ soxpipes=$(printf '\n"|sox -n -p synth '$(echo "${notes[0]}" |
+             sed 's/:.*//')' sin '$(echo "${notes[0]}" | sed 's/.*://')'"\n')
+ for note in "${notes[@]:1}"
+ do
+  soxpipes+=$(printf '%b' '\n"|sox -n -p synth '$(echo "$note" |
+              sed 's/:.*//')' sin '$(echo "$note" | sed 's/.*://')'"')
+ done
 
- if [[ $1 = "loop" && $2 ]]
- then
-  if [[ $2 = "yes" || $2 = "no" ]]
-  then
-   case $3 in
-    "--arggen")
-     soxPipesCreator &&
-     echo "$soxpipes"
-     ;;
-    "--help")
-     printf "%s\n" \
-     "Usage: $(basename $0) (--arggen)" \
-     "" \
-     "Generates sounds from SoX according to the notes array and plays them." \
-     "" \
-     " --arggen                  Will not play music; instead it will redirect" \
-     "                             all generated SoX pipes to standard output." \
-     " --help                    Display this help." \
-     ""
-     exit 0
-     ;;
-    *)
-     if [ $melodyCount -eq 0 ]
-     then
-      printf "$textintro"
-     fi
-     echo "Pipes are loading, please wait..."
-     soxPipesCreator &&
-     trap 'pkill -f "play -S -V1"; exit 0' SIGINT SIGTERM
-     if [ $2 = "yes" ]
-     then
-      while true
-      do
-       soxPlayPipes
-       ((melodyCount++))
-      done
-     else
-      soxPlayPipes
-      ((melodyCount++))
-     fi
-     ;;
-   esac
-  else
-   echo "Error: Invalid loop argument"
-   exit 1
-  fi
- else
-  echo "Error: Missing loop argument"
-  exit 1
- fi
- unset soxpipes # For multiple instances of this function
+ echo "$soxpipes"
 }
