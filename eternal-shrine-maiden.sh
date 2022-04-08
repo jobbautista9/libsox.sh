@@ -170,7 +170,7 @@ verse3; verse3
 # verse 4
 function verse4-part1 {
  notes+=(
-  ".8:${ds[4]}"
+  "$ha:${ds[4]}"
   "$qu:${d[4]}"
   "$ei:${c[4]}"
   "1:${d[4]}"
@@ -212,7 +212,7 @@ verse4-part1; verse4-common-cd;
 verse4-part1; verse4-common-cd;
 function verse4-part2 {
  notes+=(
-  ".8:${g[4]}"
+  "$ha:${g[4]}"
   "$qu:${f[4]}"
   "$ei:${ds[4]}"
   "1:${f[4]}"
