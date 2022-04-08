@@ -90,7 +90,7 @@ notes+=(
  "0.05:489 # Custom frequencies too, though I'm not sure why you'd do that
 )
 
-execute # Useful for dividing the part that loops and the part that doesn't
+createSoxPipes # Useful for dividing the part that loops and the part that doesn't
 
 # Loop start
 setTempo 160 # Change the BPM if needed
@@ -132,7 +132,7 @@ notes+=(
  "$si:${f[5]}"
 )
 
-execute
+createSoxPipes
 
 ##############################################################################
 

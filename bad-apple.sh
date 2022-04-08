@@ -348,4 +348,4 @@ notes+=(
  "$fu:${as[5]}-902"
 )
 
-execute # loop yes $1
+createSoxPipes # loop yes $1

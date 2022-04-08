@@ -101,7 +101,7 @@ notes=(
  "$si:${d[4]}"
  "$qu:${f[4]}" # 62nd item
 )
-execute # loop no $1
+createSoxPipes # loop no $1
 
 # main loop
 setTempo 155
@@ -690,4 +690,4 @@ function verse7 {
 }
 verse7; verse7;
 
-execute # loop yes $1
+createSoxPipes # loop yes $1

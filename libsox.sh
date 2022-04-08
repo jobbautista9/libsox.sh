@@ -59,8 +59,7 @@ function setTempo {
 
 declare -a notes # In the following format - "$duration:${key}[pitch]"
 
-declare melodyCount=0
-function execute {
+function createSoxPipes {
  declare soxpipes
  soxpipes=$(printf '\n"|sox -n -p synth '$(echo "${notes[0]}" |
              sed 's/:.*//')' sin '$(echo "${notes[0]}" | sed 's/.*://')'"\n')
