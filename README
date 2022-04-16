@@ -19,13 +19,14 @@ Some features of this library:
 - Easy to write syntax for inputting notes ("$duration:${key[pitch]}")
  - Inspired from korobeiniki.sh of the dsuni/bashtris repository
 - Supports two-note harmonies ("$duration:${key1[pitch1]},${key2[pitch2]}")
+ - Must be the same duration and instrument
 - Supports every synth type included in SoX
 - Adheres to the Unix philosophy of "do one thing and do it well"
 
 What this library doesn't support:
 
 - Using your own samples (just use FamiTracker or a DAW for that)
-- Harmonies with more than two notes
+- Harmonies with more than two notes, or different durations or instruments
 - POSIX compatibility
 
 Usage
@@ -71,6 +72,8 @@ Optional ASCII art and info about the music goes here.
 '
 
 setTempo 120 # In BPM
+
+setDefaultSynthType sin # Consult sox's manual. Default is sine
 
 notes=(
  # "$duration:${note[pitch]}"
@@ -121,6 +124,8 @@ echo # Useful for distinguishing the part that loops and the part that doesn't
 # Loop start
 setTempo 160 # Change the BPM if needed
 
+setDefaultSynthType pluck # You can change the synth type midway.
+
 notes+=(
  "$dei:${fs[5]},${gs[5]}" # You can do two-note harmonies
  "$dei:${c[6]}"
@@ -133,6 +138,9 @@ function commonNotes {
   "$si:${cs[5]}"
   "$si:${gs[4]}"
   "$si:${fs[4]}"
+ )
+ silence # Required if you're using a synth type that doesn't support freq=0
+ notes+=(
   "$si:${e[4]}"
   "$si:${cs[5]}"
  )
