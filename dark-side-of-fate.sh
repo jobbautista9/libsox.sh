@@ -37,27 +37,30 @@ Arranged by Job Bautista
 
 setTempo 168
 
-setDefaultSynthType pluck
 
 # intro
-function dqu-e {
- declare -n note1=$1
- notes+=(
-  "$dqu:${note1[4]},${note1[3]}"
-  "$ei:${note1[4]},${note1[3]}"
- )
+function intro {
+ setDefaultSynthType pluck
+ function dqu-e {
+  declare -n note1=$1
+  notes+=(
+   "$dqu:${note1[4]},${note1[3]}"
+   "$ei:${note1[4]},${note1[3]}"
+  )
+ }
+ dqu-e f; dqu-e fs; dqu-e g; dqu-e gs;
+ function e_4 {
+  declare -n note1=$1
+  for i in {1..4}; do notes+=( "$ei:${note1[4]},${note1[3]}" ); done;
+ }
+ e_4 f; e_4 fs; e_4 g; e_4 gs;
 }
-dqu-e f; dqu-e fs; dqu-e g; dqu-e gs;
-function e_4 {
- declare -n note1=$1
- for i in {1..4}; do notes+=( "$ei:${note1[4]},${note1[3]}" ); done;
-}
-e_4 f; e_4 fs; e_4 g; e_4 gs;
+intro
 createSoxPipes
 
-# verse 1
 setDefaultSynthType sin
 
+# verse 1
 function verse1 {
  notes+=(
   "$ei:${cs[5]},${e[4]}"
@@ -97,59 +100,62 @@ verse1; notes+=( "$qu:${gs[4]},${ds[4]}" );
 verse1; notes+=( "$dei:${gs[4]},${ds[4]}" );
 
 # verse 2
-function verse2-common {
- notes+=(
-  "$si:${cs[4]}"
-  "$si:${ds[4]}"
-  "$si:${e[4]}"
-  "$si:${fs[4]}"
-  "$ei:${e[4]}"
-  "$si:${fs[4]}"
-  "$si:${gs[4]}"
-  "$si:${gs[4]}"
-  "$si:${cs[5]}"
-  "$si:${ds[5]}"
-  "$si:${e[5]}"
-  "$ei:${fs[5]},${ds[5]}"
-  "$si:${gs[5]}"
- )
-}
-function verse2-part1 {
- verse2-common;
- notes+=(
-  "$si:${fs[5]}"
+function verse2 {
+ function verse2-common {
+  notes+=(
+   "$si:${cs[4]}"
+   "$si:${ds[4]}"
+   "$si:${e[4]}"
+   "$si:${fs[4]}"
+   "$ei:${e[4]}"
+   "$si:${fs[4]}"
+   "$si:${gs[4]}"
+   "$si:${gs[4]}"
+   "$si:${cs[5]}"
+   "$si:${ds[5]}"
+   "$si:${e[5]}"
+   "$ei:${fs[5]},${ds[5]}"
+   "$si:${gs[5]}"
+  )
+ }
+ function verse2-part1 {
+  verse2-common;
+  notes+=(
+   "$si:${fs[5]}"
 
-  "$si:${cs[5]},${gs[5]}"
-  "$si:${cs[5]},${gs[5]}"
-  "$si:${gs[5]},${e[5]}"
-  "$si:${gs[5]},${e[5]}"
-  "$si:${cs[5]},${gs[5]}"
-  "$si:${cs[5]},${gs[5]}"
-  "$si:${gs[5]},${e[5]}"
-  "$si:${gs[5]},${e[5]}"
-  "$dqu:${cs[5]},${gs[4]}"
-  "$si:${gs[4]}"
- )
+   "$si:${cs[5]},${gs[5]}"
+   "$si:${cs[5]},${gs[5]}"
+   "$si:${gs[5]},${e[5]}"
+   "$si:${gs[5]},${e[5]}"
+   "$si:${cs[5]},${gs[5]}"
+   "$si:${cs[5]},${gs[5]}"
+   "$si:${gs[5]},${e[5]}"
+   "$si:${gs[5]},${e[5]}"
+   "$dqu:${cs[5]},${gs[4]}"
+   "$si:${gs[4]}"
+  )
+ }
+ notes+=( "$si:${e[4]}" ); verse2-part1
+ function verse2-part2 {
+  notes+=( "$si:${e[4]}" ); verse2-common;
+  notes+=(
+   "$si:${b[5]}"
+   "$si:${cs[6]}"
+   "$si:${gs[5]}"
+   "$si:${fs[5]}"
+   "$si:${e[5]}"
+   "$si:${cs[5]}"
+   "$si:${gs[4]}"
+   "$si:${fs[4]}"
+   "$si:${e[4]}"
+   "$ha:${cs[4]}"
+  )
+ }
+ verse2-part2
+ verse2-part1
+ verse2-part2
 }
-notes+=( "$si:${e[4]}" ); verse2-part1
-function verse2-part2 {
- notes+=( "$si:${e[4]}" ); verse2-common;
- notes+=(
-  "$si:${b[5]}"
-  "$si:${cs[6]}"
-  "$si:${gs[5]}"
-  "$si:${fs[5]}"
-  "$si:${e[5]}"
-  "$si:${cs[5]}"
-  "$si:${gs[4]}"
-  "$si:${fs[4]}"
-  "$si:${e[4]}"
-  "$ha:${cs[4]}"
- )
-}
-verse2-part2
-verse2-part1
-verse2-part2
+verse2
 
 # verse 3 which is basically lower pitched verse 1
 function verse3 {
@@ -245,5 +251,111 @@ function verse4-part2 {
 verse4-part2
 verse4-part1
 verse4-part2
+
+createSoxPipes
+
+intro
+createSoxPipes
+
+setDefaultSynthType sin
+
+verse1; notes+=( "$qu:${gs[4]},${ds[4]}" );
+verse1; notes+=( "$dei:${gs[4]},${ds[4]}" );
+verse2
+
+# verse 5 which is basically a higher pitched verse 1
+function verse5 {
+ notes+=(
+  "$ei:${e[5]},${g[4]}"
+  "$si:${b[4]}"
+  "$si:${e[5]}"
+  "$si:${fs[5]}"
+  "$si:${g[5]}"
+  "$ei:${a[5]},${b[4]}"
+  "$dqu:${e[5]},${c[5]}"
+  "$ei:${e[5]},${c[5]}"
+  "$ei:${fs[5]},${d[5]}"
+  "$si:${e[5]}"
+  "$si:${fs[5]}"
+  "$si:${fs[5]}"
+  "$si:${g[5]}"
+  "$si:${fs[5]}"
+  "$si:${d[5]}"
+  "$dei:${b[4]},${fs[4]}"
+  "$dei:${ds[5]},${fs[4]}"
+  "$ei:${b[5]},${ds[5]}"
+
+  "$dqu:${g[5]},${e[5]}"
+  "$ei:${g[5]},${e[5]}"
+  "$dqu:${e[5]},${c[5]}"
+  "$si:${d[5]}"
+  "$si:${c[5]}"
+  "$dei:${a[4]},${fs[4]}"
+  "$dei:${a[4]},${fs[4]}"
+  "$ei:${a[4]},${fs[4]}"
+  "$si:${b[4]}"
+  "$si:${c[5]}"
+  "$si:${b[4]}"
+  "$si:${c[5]}"
+ )
+}
+verse5; notes+=( "$qu:${b[4]},${fs[4]}" );
+verse5; notes+=( "$ei:${b[4]},${fs[4]}" "$si:${b[4]}" );
+
+# verse 6 which is basically a higher pitched verse 2
+function verse6-common {
+ notes+=(
+  "$si:${e[4]}"
+  "$si:${fs[4]}"
+  "$si:${g[4]}"
+  "$si:${a[4]}"
+  "$ei:${b[4]},${g[4]}"
+  "$si:${a[4]}"
+  "$si:${b[4]}"
+  "$si:${b[4]}"
+  "$si:${e[5]}"
+  "$si:${fs[5]}"
+  "$si:${g[5]}"
+  "$ei:${a[5]},${fs[5]}"
+ )
+}
+function verse6-part1 {
+ verse6-common;
+ notes+=(
+  "$si:${g[5]}"
+  "$si:${a[5]}"
+
+  "$si:${e[5]},${b[4]}"
+  "$si:${e[5]},${b[4]}"
+  "$si:${b[5]},${g[5]}"
+  "$si:${b[5]},${g[5]}"
+  "$si:${e[5]},${b[4]}"
+  "$si:${e[5]},${b[4]}"
+  "$si:${b[5]},${g[5]}"
+  "$si:${b[5]},${g[5]}"
+  "$dqu:${e[5]},${b[4]}"
+  "$si:${b[4]}"
+ )
+}
+notes+=( "$si:${g[4]}" ); verse6-part1
+function verse6-part2 {
+ notes+=( "$si:${g[4]}" ); verse6-common;
+ notes+=(
+  "$si:${b[5]}"
+  "$si:${d[6]}"
+  "$si:${e[6]}"
+  "$si:${b[5]}"
+  "$si:${a[5]}"
+  "$si:${g[5]}"
+  "$si:${e[5]}"
+  "$si:${b[4]}"
+  "$si:${a[4]}"
+  "$si:${g[4]}"
+  "$ha:${e[4]}"
+ )
+}
+verse6-part2
+verse6-part1
+verse6-part2
 
 createSoxPipes
