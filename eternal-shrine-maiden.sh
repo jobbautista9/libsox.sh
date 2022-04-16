@@ -41,6 +41,8 @@ Arranged by Job Bautista
 
 setTempo 150
 
+setDefaultSynthType sin
+
 # intro
 function intro-ccg {
  notes+=(
@@ -79,9 +81,8 @@ notes+=(
  "$qu:${g[4]}"
 )
 
-createSoxPipes # loop no $1
-
-notes=()
+createSoxPipes
+echo
 
 # verse 1
 function verse1-common {
@@ -250,4 +251,4 @@ notes+=(
  "$qu:${g[4]}"
 )
 
-createSoxPipes # loop yes $1
+createSoxPipes

@@ -37,7 +37,15 @@ a=(27 55 110 220 440 880 1760 3520 7040)
 as=(29 58 116 233 466 932 1864 3729 7458)
 b=(30 61 123 246 493 987 1975 3951 7902)
 
-declare -rg c cs d ds e f g gs a as b
+# flats as references to their respective sharps
+declare -n df db ef eb gf gb af ab bf bb
+df="cs" db="cs"
+ef="ds" eb="ds"
+gf="fs" gb="fs"
+af="gs" ab="gs"
+bf="as" bb="as"
+
+declare -rg c cs d ds e f g gs a as b df db ef eb gf gb af ab bf bb
 
 function setTempo {
  declare -g BPM=$1
@@ -57,17 +65,34 @@ function setTempo {
  declare -g tsi=$(echo "scale=3; 10 / $BPM" | bc -l) # Triplet-sixteenth note
 }
 
-declare -a notes # In the following format - "$duration:${key}[pitch]"
+declare -ag notes # In the following format - "$duration:${key[pitch]}"
+                 # For a harmony - "$duration:${key1[pitch1]},${key2[pitch2]}"
+
+declare -g defaultsynth="sin" # for backwards compatibility with previous
+synthtype="$defaultsynth"     # child scripts that only used sine
+
+function setDefaultSynthType {
+ defaultsynth=$1
+ synthtype="$defaultsynth"
+}
+
+function silence { # needed because pluck synth doesn't support zero frequency
+ declare -n duration=$1 # we want $1 to be recognized as a variable name
+ createSoxPipes # necessary because we will be changing synth type
+ synthtype="sin" # sin, square, sawtooth, trapezium, and exp support freq=0
+ notes+=( "$duration:0" )
+ createSoxPipes # get the silence printed before we return to default synth
+ synthtype="$defaultsynth"
+}
 
 function createSoxPipes {
- declare soxpipes
- soxpipes=$(printf '\n"|sox -n -p synth '$(echo "${notes[0]}" |
-             sed 's/:.*//')' sin '$(echo "${notes[0]}" | sed 's/.*://')'"\n')
- for note in "${notes[@]:1}"
+ for note in "${notes[@]}"
  do
-  soxpipes+=$(printf '%b' '\n"|sox -n -p synth '$(echo "$note" |
-              sed 's/:.*//')' sin '$(echo "$note" | sed 's/.*://')'"')
+  printf '"|sox -n -p synth '$(echo "$note" |
+              sed 's/:.*//')' '$synthtype' '$(echo "$note" | sed 's/.*://' |
+              sed 's/,.*//')' '$synthtype' '$(echo "$note" | sed 's/.*://' |
+              sed 's/.*,//')'"\n'
+  # The sed for commas is there to support two-note harmonies.
  done
-
- echo "$soxpipes"
+ notes=() # You usually want to reset the notes array after calling this
 }

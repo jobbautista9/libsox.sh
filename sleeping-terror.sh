@@ -35,6 +35,8 @@ Arranged by Job Bautista
 
 '
 
+setDefaultSynthType sin
+
 # intro
 setTempo 102
 notes=(
@@ -99,15 +101,18 @@ notes=(
  "$si:${ds[4]}"
  "$si:${gs[4]}"
  "$si:${d[4]}"
- "$qu:${f[4]}" # 62nd item
+ "$qu:${f[4]}"
+
+ "3.096:0" # 2 whole notes in 155 BPM
 )
-createSoxPipes # loop no $1
+createSoxPipes
+echo
 
 # main loop
 setTempo 155
 
 # fast bridge
-notes=(
+notes+=(
  "$si:${c[5]}"
  "$si:${gs[4]}"
  "$si:${fs[4]}"
@@ -689,5 +694,6 @@ function verse7 {
  )
 }
 verse7; verse7;
+notes+=( "$fu:0" )
 
-createSoxPipes # loop yes $1
+createSoxPipes

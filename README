@@ -4,6 +4,30 @@ libsox.sh
 A library for GNU bash making it easier to create music with the power of SoX
 synths.
 
+If you're one of these people:
+
+- a Bash programmer
+- suck at reading sheet music
+- finds MML too difficult
+- too lazy to learn FamiTracker
+- think that scientific note duration is the best thing since sliced bread
+
+Then try this crappy library of mine!
+
+Some features of this library:
+
+- Easy to write syntax for inputting notes ("$duration:${key[pitch]}")
+ - Inspired from korobeiniki.sh of the dsuni/bashtris repository
+- Supports two-note harmonies ("$duration:${key1[pitch1]},${key2[pitch2]}")
+- Supports every synth type included in SoX
+- Adheres to the Unix philosophy of "do one thing and do it well"
+
+What this library doesn't support:
+
+- Using your own samples (just use FamiTracker or a DAW for that)
+- Harmonies with more than two notes
+- POSIX compatibility
+
 Usage
 -----
 
@@ -63,7 +87,8 @@ notes=(
 
  "$si:${c[5]}" # A sixteenth C note in the 5th octave
  "$ei:${gs[4]}" # An eighth G sharp in 4th octave
- "$qu:${fs[4]}"
+ "$qu:${gf[4]}" # A quarter G flat in 4th octave
+ "$qu:${gb[4]}" # Also a G flat
 )
 
 function repeatingNotes { # Use bash functions to repeat parts of your music
@@ -87,16 +112,17 @@ notes+=(
  "$dei:${b[2]}" # Dotted notes are supported
  "$tqu:${a[3]}" # Triplets are supported
  "0.02:${gs[4]}" # You can do custom durations
- "0.05:489 # Custom frequencies too, though I'm not sure why you'd do that
+ "0.05:489 # Custom frequencies too
 )
 
-createSoxPipes # Useful for dividing the part that loops and the part that doesn't
+createSoxPipes # Will reset the notes array too
+echo # Useful for distinguishing the part that loops and the part that doesn't
 
 # Loop start
 setTempo 160 # Change the BPM if needed
 
-notes=( # Don't forget to reset the notes array. Don't append.
- "$dei:${fs[5]}"
+notes+=(
+ "$dei:${fs[5]},${gs[5]}" # You can do two-note harmonies
  "$dei:${c[6]}"
  "$ei:${as[5]}"
  "$ha:${as[5]}"
