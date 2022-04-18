@@ -66,7 +66,11 @@ function setTempo {
 }
 
 declare -ag notes # In the following format - "$duration:${key[pitch]}"
-                 # For a harmony - "$duration:${key1[pitch1]},${key2[pitch2]}"
+ # For a two-note harmony - "$duration:${key1[pitch1]},${key2[pitch2]}"
+ # 3-note: "$duration:${k1[p1]},${k2[p2]}*${k3[p3]}"
+ # 4-note: "$duration:${k1[p1]},${k2[p2]}*${k3[p3]}_${k4[p4]}"
+ # 5: "$duration:${k1[p1]},${k2[p2]}*${k3[p3]}_${k4[p4]}@${k5[p5]}"
+ # 6: "$duration:${k1[p1]},${k2[p2]}*${k3[p3]}_${k4[p4]}@${k5[p5]}^${k6[p6]}"
 
 declare -g defaultsynth="sin" # for backwards compatibility with previous
 synthtype="$defaultsynth"     # child scripts that only used sine
@@ -85,14 +89,40 @@ function silence { # needed because pluck synth doesn't support zero frequency
  synthtype="$defaultsynth"
 }
 
-function createSoxPipes {
+function createSoxPipes { # default behavior
  for note in "${notes[@]}"
  do
-  printf '"|sox -n -p synth '$(echo "$note" |
-              sed 's/:.*//')' '$synthtype' '$(echo "$note" | sed 's/.*://' |
-              sed 's/,.*//')' '$synthtype' '$(echo "$note" | sed 's/.*://' |
-              sed 's/.*,//')'"\n'
-  # The sed for commas is there to support two-note harmonies.
+   printf '"|sox -n -p synth '$(echo "$note" |
+            sed 's/:.*//')' '$synthtype' '$(echo "$note" |
+            sed 's/.*://;s/,.*//')' '$synthtype' '$(echo "$note" |
+            sed 's/.*://;s/.*,//;s/\*.*//')'"\n'
  done
  notes=() # You usually want to reset the notes array after calling this
+}
+
+function enable3456Harmony { # enables 3/4/5/6-note harmony support
+ # The reason this is not default behavior is that this requires an audio
+ # processing buffer size of 16384 bytes. A larger buffer can cause sox to be
+ # slow to respond. Also, SoX for some reason requires at least 4 channels
+ # if you want to hear the third note in a 3-note harmony.
+ function createSoxPipes { # redefine createSoxPipes
+  if [[ -n $notes ]] # Check if notes array has items; otherwise do nothing
+  then
+   for note in "${notes[@]}"
+   do
+    printf '"|sox -n -p synth '$(echo "$note" |
+             sed 's/:.*//')' '$synthtype' '$(echo "$note" |
+             sed 's/.*://;s/,.*//')' '$synthtype' '$(echo "$note" |
+             sed 's/.*://;s/.*,//;s/\*.*//')' '$synthtype' '$(echo "$note" |
+             sed 's/.*,//;s/.*://;s/.*\*//;
+             s/_.*//')' '$synthtype' '$(echo "$note" | sed 's/.*,//;
+             s/.*://;s/.*\*//;s/.*@//;s/\^.*//;
+             s/.*_//')' '$synthtype' '$(echo "$note" | sed 's/.*_//;
+             s/.*@//;s/\^.*//;s/.*\*//;s/.*://;
+             s/.*,//')' '$synthtype' '$(echo "$note" | sed 's/.*,//;
+             s/.*\*//;s/.*_//;s/.*://;s/.*@//;s/.*\^//')'"\n'
+   done
+   notes=()
+  fi
+ }
 }
