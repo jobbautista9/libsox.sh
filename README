@@ -20,13 +20,18 @@ Some features of this library:
  - Inspired from korobeiniki.sh of the dsuni/bashtris repository
 - Supports two-note harmonies ("$duration:${key1[pitch1]},${key2[pitch2]}")
  - Must be the same duration and instrument
+- Optionally supports 3/4/5/6-note harmonies as well
+ -"$duration:${k1[p1]},${k2[p2]}*${k3[p3]}_${k4[p4]@${k5[p5]}}^${k6[p6]}"
+ -You need to call "enable3456Harmony" to enable this feature
+ -You also need to set sox's audio processing buffer to 16384 bytes, else
+  you will get ALSA underrun
 - Supports every synth type included in SoX
 - Adheres to the Unix philosophy of "do one thing and do it well"
 
 What this library doesn't support:
 
 - Using your own samples (just use FamiTracker or a DAW for that)
-- Harmonies with more than two notes, or different durations or instruments
+- Harmonies with different durations or instruments
 - POSIX compatibility
 
 Usage

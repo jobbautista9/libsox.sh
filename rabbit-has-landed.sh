@@ -43,7 +43,7 @@ enable3456Harmony
 
 setTempo 155
 
-setDefaultSynthType square
+setDefaultSynthType square # sine synth struggles with 6 channels
 
 # intro
 function ee_4h {
