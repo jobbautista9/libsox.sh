@@ -116,7 +116,7 @@ function enable3456Harmony { # enables 3/4/5/6-note harmony support
              sed 's/.*://;s/.*,//;s/\*.*//')' '$synthtype' '$(echo "$note" |
              sed 's/.*,//;s/.*://;s/.*\*//;
              s/_.*//')' '$synthtype' '$(echo "$note" | sed 's/.*,//;
-             s/.*://;s/.*\*//;s/.*@//;s/\^.*//;
+             s/.*://;s/.*\*//;s/@.*//;s/\^.*//;
              s/.*_//')' '$synthtype' '$(echo "$note" | sed 's/.*_//;
              s/.*@//;s/\^.*//;s/.*\*//;s/.*://;
              s/.*,//')' '$synthtype' '$(echo "$note" | sed 's/.*,//;
