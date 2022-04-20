@@ -29,9 +29,9 @@ declare textintro='
 / _` |__) |__  |__  |\ | __ |__  \ / |__  |  \
 \__> |  \ |___ |___ | \|    |___  |  |___ |__/
 
-      ___            __        __
-   | |__   /\  |    /  \ |  | /__` \ /
-\__/ |___ /~~\ |___ \__/ \__/ .__/  |
+         ___            __        __
+      | |__   /\  |    /  \ |  | /__` \ /
+   \__/ |___ /~~\ |___ \__/ \__/ .__/  |
 
 Green-Eyed Jealousy
 Composed by ZUN for Touhou Chireiden: Subterranean Animism
