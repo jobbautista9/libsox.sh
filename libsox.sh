@@ -101,10 +101,10 @@ function createSoxPipes { # default behavior
 }
 
 function enable3456Harmony { # enables 3/4/5/6-note harmony support
- # The reason this is not default behavior is that this requires an audio
- # processing buffer size of 16384 bytes. A larger buffer can cause sox to be
- # slow to respond. Also, SoX for some reason requires at least 4 channels
- # if you want to hear the third note in a 3-note harmony.
+ # The reason this is not default behavior is because in ALSA, it requires an
+ # audio processing buffer size of 16384 bytes. A larger buffer can cause sox
+ # to be slow to respond. Also, SoX in ALSA for some reason requires at least
+ # 4 channels if you want to hear the third note in a 3-note harmony.
  function createSoxPipes { # redefine createSoxPipes
   if [[ -n $notes ]] # Check if notes array has items; otherwise do nothing
   then
